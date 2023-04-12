@@ -41,7 +41,7 @@ app.get("/channel", (req, res) => {
     })
     
     console.log("channel socket emitted");
-    res.status(200).send("ping ping")
+    res.sendStatus(200)
 })
 
 app.get("/message/", (req, res) => {
@@ -52,7 +52,7 @@ app.get("/message/", (req, res) => {
     })
     
     console.log("message socket emitted");
-    res.status(200).send("ping ping")
+    res.sendStatus(200)
 })
 
 app.get("/broadcast", (req, res) => {
@@ -60,7 +60,7 @@ app.get("/broadcast", (req, res) => {
         client.emit("new-broadcast", "there is new a new broadcast, do a get request")
     })
     
-    console.log("pinged the socket");
-    res.status(200).send("ping ping")
+    console.log("new broadcast was emitted");
+    res.sendStatus(200)
 })
 
