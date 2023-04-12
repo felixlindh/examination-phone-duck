@@ -31,19 +31,8 @@ function authorizeAdmin(req, res, next) {
     res.send("Authorization header is missing");
   } else {
     const decoded = jwtUtil.getUser(req)
-    const authToken = authHeader.replace("Bearer ", "");
     if (decoded.role == "ADMIN") {
-      try {
-        // försök verifera 
-        jwtUtil.verify(authToken); // may throw jwt error-to-be-caught
-        next(); // proceed to next step in express
-      } catch (err) {
-        //   men om det inte går...
-        console.log(req.ip, err.serverMessage);
-
-        res.status(403); //forbidden
-        res.send(err.clientMessage);
-      }
+      next()
     } else {
       res.status(403).send("You do not have the admin role");
     }
