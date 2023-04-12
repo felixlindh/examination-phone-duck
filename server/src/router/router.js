@@ -22,7 +22,7 @@ router.post("/create/account/", async (req, res) => { // skapar ett konto
     if(result.matchedCount !== 0) {
         res.status(400).send("User allready exists")
     } else {
-        res.status(200).send("Account was created")
+        res.status(201).send("Account was created")
     }
 })
 
@@ -63,7 +63,7 @@ router.put("/channel/", jwtFilter.authorize, async (req, res) => { // <-- skapar
     } else {
         const newChannel = await fetchCollection("channels").updateOne({title: channel.title}, {$setOnInsert: channel}, {upsert:true})
 
-        res.send(newChannel)
+        res.status(201).send(newChannel)
         await fetch("http://localhost:5000/channel") // säger åt socketen att emitta till alla som är uppkopplade
     }
     
@@ -73,7 +73,7 @@ router.get("/channel/", async (req, res) => { //hämtar en lista över annonsera
     try {
         const allChannels = await fetchCollection("channels").find().toArray()
 
-        res.send(allChannels)
+        res.status(200).send(allChannels)
       } catch (err) {
 
         res.status(500); 
@@ -109,7 +109,7 @@ router.post("/channel/:id", jwtFilter.authorize, async (req, res) => { // <-- sk
     if(channel.matchedCount == 0) {
         res.status(404).send({error: "Could not find the channel"})
     } else {
-        res.status(200).send(channel)
+        res.status(201).send(channel)
         await fetch(`http://localhost:5000/message/?id=${id}`) // säger åt socketen att emitta till alla som är uppkopplade
     }
     
@@ -154,7 +154,7 @@ router.post("/broadcast/", jwtFilter.authorizeAdmin, async (req, res) => { // <-
         broadcast.createdBy = decoded.username 
         const newBroadcast = await fetchCollection("broadcasts").insertOne(broadcast)
 
-        res.send(newBroadcast)
+        res.status(201).send(newBroadcast)
         await fetch("http://localhost:5000/broadcast") // säger åt socketen att emitta till alla som är uppkopplade
     }
     
